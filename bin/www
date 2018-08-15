@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
-process.on('uncaughtException', (err) => {
-  logger.error(`quick-chat-server err_type=exception msg=${err.message} stack:
-${err.stack}`);
-  process.exit(1);
-});
+// process.on('uncaughtException', (err) => {
+//   logger.error(`quick-chat-server err_type=exception msg=${err.message} stack:
+// ${err.stack}`);
+//   process.exit(1);
+// });
 
-process.on('unhandledRejection', (reason, p) => {
-  logger.error(`quick-chat-server: err_type=unhandled_rejection msg="Promise:
-${p.name} reason: ${reason.message} stack: ${reason.stack}"`);
-  process.exit(1);
-});
+// process.on('unhandledRejection', (reason, p) => {
+//   logger.error(`quick-chat-server: err_type=unhandled_rejection msg="Promise:
+// ${p.name} reason: ${reason.message} stack: ${reason.stack}"`);
+//   process.exit(1);
+// });
 
 
 /**

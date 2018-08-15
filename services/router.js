@@ -8,11 +8,12 @@ const cities				= require('../controllers/cities');
 
 router.route('/auth/users')
 	//.options(cors()) // enable pre-flight request for DELETE request
-	.get(security.authenticate(), cors(), users.get);	
+	.get(security.authenticate(), cors(), users.get)
 
 router.route('/cities')
 	//.options(cors()) // enable pre-flight request for DELETE request
-	.get(security.authenticate(), cors(), cities.get);	
+	.get(security.authenticate(), cors(), cities.get)
+	.post(security.authenticate(), cors(), cities.post)	
 
 
 module.exports = router;

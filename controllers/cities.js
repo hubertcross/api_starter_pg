@@ -1,16 +1,14 @@
 //const pool = require('../services/pgdatabase');
 const cities = require('../db_apis/cities');
 
-const query = "SELECT * FROM city LIMIT 10;";
-
- module.exports.get = function get(req, res, next) {
+module.exports.get = function get(req, res, next) {
  	console.log("Cities GET service");
 
 	const context = {
-		id : req.body.id
+		id : req.query.id
 	};
 
-	console.log("wtf1");
+	console.log("context: " + JSON.stringify(context));
 //https://stackoverflow.com/questions/39059990/reusing-pg-pool-via-module-exports
 
 
@@ -25,3 +23,41 @@ const query = "SELECT * FROM city LIMIT 10;";
 		})
 		.catch(next);
  }
+
+
+const pool = require('../services/pgpool');
+
+module.exports.post = (req, res, next)  => {
+	console.log("controllers/cities.post");
+
+	return cities.create()
+	.catch( (err) => {
+		console.log("caught : " + err);
+	});
+}
+
+
+// module.exports.post = (req, res, next)  => {
+// 	console.log("db_apis/cities.create");
+
+// 	(async () => {
+// 	  // note: we don't try/catch this because if connecting throws an exception
+// 	  // we don't need to dispose of the client (it will be undefined)
+// 	  const client = await pool().connect()
+
+// 	  try {
+// 	    await client.query('BEGIN')
+// 	    const { rows } = await client.query('INSERT INTO person (name, city) VALUES($1, $2) RETURNING id', ['Donald Fleury', 1])
+
+// 	    // const insertPhotoText = 'INSERT INTO photos(user_id, photo_url) VALUES ($1, $2)'
+// 	    // const insertPhotoValues = [res.rows[0].id, 's3.bucket.foo']
+// 	    // await client.query(insertPhotoText, insertPhotoValues)
+// 	    await client.query('COMMIT')
+// 	  } catch (e) {
+// 	    await client.query('ROLLBACK')
+// 	    throw e
+// 	  } finally {
+// 	    client.release()
+// 	  }
+// 	})().catch(e => console.error(e.stack))	
+// }

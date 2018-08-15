@@ -36,6 +36,70 @@ function simpleExecute(query) {
 
 module.exports.simpleExecute = simpleExecute;
 
+// take array of json objects with query and params, run them in a single transaction
+/* 
+[{ queryString: "INSERT INTO person (name, city) VALUES($1, $2) RETURNING id",
+   params: ['Wolverine', 1]
+},
+{ queryString: "INSERT INTO city (id, name, countrycode, district, population) VALUES($1, $2) RETURNING id",
+   params: [9999, 'Rivas', 'NIC', 'Rivas', 30000]
+}
+]
+*/
+function transactionExecute(query) {
+	console.log("ugh123");
+	(async () => {
+	  // note: we don't try/catch this because if connecting throws an exception
+	  // we don't need to dispose of the client (it will be undefined)
+	  const client = await pool().connect()
+
+	  try {
+	    await client.query('BEGIN')
+	    const { rows } = await client.query(query);
+
+	    // const insertPhotoText = 'INSERT INTO photos(user_id, photo_url) VALUES ($1, $2)'
+	    // const insertPhotoValues = [res.rows[0].id, 's3.bucket.foo']
+	    // await client.query(insertPhotoText, insertPhotoValues)
+	    await client.query('COMMIT')
+	  } catch (e) {
+	    await client.query('ROLLBACK')
+	    throw e
+	  } finally {
+	    client.release()
+	  }
+	})().catch(e => console.error(e.stack))	
+	console.log("ugh124");
+}
+
+module.exports.transactionExecute = transactionExecute;
+
+/*
+function transactionExecute(queryAOJ) {
+	console.log("ugh123");
+	(async () => {
+	  // note: we don't try/catch this because if connecting throws an exception
+	  // we don't need to dispose of the client (it will be undefined)
+	  const client = await pool().connect()
+
+	  try {
+	    await client.query('BEGIN')
+	    const { rows } = await client.query('INSERT INTO person (name, city) VALUES($1, $2) RETURNING id', ['Wolverine', 1])
+
+	    // const insertPhotoText = 'INSERT INTO photos(user_id, photo_url) VALUES ($1, $2)'
+	    // const insertPhotoValues = [res.rows[0].id, 's3.bucket.foo']
+	    // await client.query(insertPhotoText, insertPhotoValues)
+	    await client.query('COMMIT')
+	  } catch (e) {
+	    await client.query('ROLLBACK')
+	    throw e
+	  } finally {
+	    client.release()
+	  }
+	})().catch(e => console.error(e.stack))	
+	console.log("ugh124");
+}
+*/
+
 // function storedProcExecute(spName, parametersJsonArray) {
 // 	console.log('stored proc execute');
 // 		return cp.getConnectionPoolGlobal()

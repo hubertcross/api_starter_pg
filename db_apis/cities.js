@@ -1,11 +1,46 @@
 // const pool = require('../services/pgdatabase').pool;
 const pgdatabase = require('../services/pgdatabase');
 
-const query = "SELECT * FROM city LIMIT 10;";
+// const query = "SELECT * FROM city LIMIT 10;";
+
+
+const baseQuery =
+		`SELECT
+				c.id
+				,c.name
+				,c.countrycode
+				,c.district
+				,c.population
+		FROM city AS c`;
 
 module.exports.find = (context) => {
 	console.log("db_apis/cities.find")
+
+	const binds = {};
+
+	query = baseQuery + `\nWHERE 1=1`;
+
+	if (context.id) {
+		binds.id = context.id;
+		query = query +
+				`\nAND c.id = '${binds.id}'`;
+	}
+
 	return pgdatabase.simpleExecute(query)
+		// .then(results => {
+		// 	console.log("results: " + JSON.stringify(results));
+		// })
+		// .then(results => {
+		// 	return results.rows;
+		// })
+		.catch(error => {
+			console.log("Error during simpleExecute: " + error);
+		})
+}
+
+module.exports.create = (context) => {
+	console.log("db_apis/cities.create")
+	return pgdatabase.transactionExecute(query)
 		// .then(results => {
 		// 	console.log("results: " + JSON.stringify(results));
 		// })
