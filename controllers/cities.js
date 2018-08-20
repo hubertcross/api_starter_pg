@@ -5,12 +5,14 @@ module.exports.get = function get(req, res, next) {
  	console.log("Cities GET service");
 
 	const context = {
-		id : req.query.id
+		id : req.query.id,
+		name : req.query.name,
+		countrycode : req.query.countrycode,
+		district : req.query.district
 	};
 
 	console.log("context: " + JSON.stringify(context));
 //https://stackoverflow.com/questions/39059990/reusing-pg-pool-via-module-exports
-
 
 	return cities.find(context)
 		.then(function(results) {
@@ -24,13 +26,24 @@ module.exports.get = function get(req, res, next) {
 		.catch(next);
  }
 
-
-const pool = require('../services/pgpool');
+//const pool = require('../services/pgpool');
 
 module.exports.post = (req, res, next)  => {
 	console.log("controllers/cities.post");
+	console.log("req.body: " + JSON.stringify(req.body));
 
-	return cities.create()
+	const city = {
+		name: req.body.name,
+		countrycode: req.body.countrycode,
+		district: req.body.district,
+		population:	req.body.population
+	};
+
+	return cities.create(city)
+	.then( () => {
+		console.log("bleh");
+		res.status(200).end();
+	})
 	.catch( (err) => {
 		console.log("caught : " + err);
 	});

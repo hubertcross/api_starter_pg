@@ -47,8 +47,9 @@ module.exports.simpleExecute = simpleExecute;
 ]
 */
 function transactionExecute(query) {
-	console.log("ugh123");
-	(async () => {
+	console.log("transactionExecute query: " + query);
+	// we need to return here in order to get back to the calling/outer scope	
+	return (async () => {
 	  // note: we don't try/catch this because if connecting throws an exception
 	  // we don't need to dispose of the client (it will be undefined)
 	  const client = await pool().connect()

@@ -25,6 +25,21 @@ module.exports.find = (context) => {
 		query = query +
 				`\nAND c.id = '${binds.id}'`;
 	}
+	if (context.name) {
+		binds.name = context.name;
+		query = query +
+				`\nAND c.name = '${binds.name}'`;
+	}
+	if (context.countrycode) {
+		binds.countrycode = context.countrycode;
+		query = query +
+				`\nAND c.countrycode = '${binds.countrycode}'`;
+	}
+	if (context.district) {
+		binds.district = context.district;
+		query = query +
+				`\nAND c.district = '${binds.district}'`;
+	}
 
 	return pgdatabase.simpleExecute(query)
 		// .then(results => {
@@ -40,13 +55,33 @@ module.exports.find = (context) => {
 
 module.exports.create = (context) => {
 	console.log("db_apis/cities.create")
+	console.log("city to be created: " + JSON.stringify(context));
+
+	const name			= context.name;
+	const countrycode	= context.countrycode;
+	const district		= context.district;
+	const population	= context.population;
+
+	var query = `INSERT INTO city
+				(id
+				,name
+				,countrycode
+				,district
+				,population)
+				VALUES
+				(nextval('city_id_seq')
+				,'${name}'
+				,'${countrycode}'
+				,'${district}'
+				,'${population}');`;
+
 	return pgdatabase.transactionExecute(query)
 		// .then(results => {
 		// 	console.log("results: " + JSON.stringify(results));
 		// })
-		// .then(results => {
-		// 	return results.rows;
-		// })
+		.then( () => {
+			console.log("ughhhhh");
+		})
 		.catch(error => {
 			console.log("Error during simpleExecute: " + error);
 		})
