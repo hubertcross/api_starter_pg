@@ -13,7 +13,8 @@ router.route('/auth/users')
 router.route('/cities')
 	//.options(cors()) // enable pre-flight request for DELETE request
 	.get(security.authenticate(), cors(), cities.get)
-	.post(security.authenticate(), cors(), cities.post)	
+	.post(validator.postCities, validator.postValidator, security.authenticate(), cors(), cities.post)	
+	// .post(security.authenticate(), cors(), cities.post)	
 
 
 module.exports = router;

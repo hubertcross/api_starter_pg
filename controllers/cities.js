@@ -32,12 +32,23 @@ module.exports.post = (req, res, next)  => {
 	console.log("controllers/cities.post");
 	console.log("req.body: " + JSON.stringify(req.body));
 
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({ errors: errors.mapped() });
+	}
+
 	const city = {
 		name: req.body.name,
 		countrycode: req.body.countrycode,
 		district: req.body.district,
 		population:	req.body.population
 	};
+
+	// this is called "early return" - and specifically since it's a failure condition,
+	// it's sometimes referred to as a "guarded function"
+	// if ( !(city.name && city.countrycode && city.district && city.population) ) {
+	// 	return res.status(400).end();
+	// }
 
 	return cities.create(city)
 	.then( () => {

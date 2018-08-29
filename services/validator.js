@@ -39,6 +39,17 @@ const postballs = [
   // sanitize('addresses.*.number').toInt()
 ];
 
+module.exports.postCities = [
+
+  check('name')
+    // Every validator method in the validator lib is available as a
+    // method in the check() APIs.
+    // You can customize per validator messages with .withMessage()
+    .isByteLength( {min: 1, max: undefined} ).withMessage('must be length 1 or more')
+ 
+];
+
+
 function postValidator(req, res, next) {
 	const errors = validationResult(req);
   	if (!errors.isEmpty()) {
@@ -48,5 +59,6 @@ function postValidator(req, res, next) {
   		next();
   	}
 }
+
 module.exports.postValidator = postValidator;
-module.exports.postballs = postballs;
+// module.exports.postballs = postballs;
