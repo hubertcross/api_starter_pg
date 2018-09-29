@@ -28,16 +28,45 @@ module.exports.get = function get(req, res, next) {
 		.catch(next);
  }
 
+module.exports.getc = function getc(req, res, next) {
+ 	console.log("Cities GET service");
+
+	const context = {
+		id : req.query.id,
+		name : req.query.name,
+		countrycode : req.query.countrycode,
+		district : req.query.district,
+		pagesiz : req.query.pagesiz,
+		pagenum : req.query.pagenum
+	};
+
+	console.log("context: " + JSON.stringify(context));
+//https://stackoverflow.com/questions/39059990/reusing-pg-pool-via-module-exports
+
+	return cities.findc(context)
+		.then(function(results) {
+			if(results[3] && results[3]['rowCount'] > 0) {
+				res.status(200).json( results[3] );
+			}
+			else {
+				res.status(404).end();
+			}
+		})
+		.catch(next);
+ }
+
 //const pool = require('../services/pgpool');
 
 module.exports.post = (req, res, next)  => {
 	console.log("controllers/cities.post");
 	console.log("req.body: " + JSON.stringify(req.body));
 
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(422).json({ errors: errors.mapped() });
-	}
+	// THIS IS BROKEN
+	// const errors = validationResult(req);
+	// if (!errors.isEmpty()) {
+	// 	return res.status(422).json({ errors: errors.mapped() });
+	// }
+	console.log("balls");
 
 	const city = {
 		name: req.body.name,
