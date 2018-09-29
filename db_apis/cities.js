@@ -106,14 +106,14 @@ module.exports.findc = (context) => {
 	if (context.pagesiz && context.pagenum) {
 		binds.pagesiz = context.pagesiz;
 		binds.pagenum = context.pagenum;
+		binds.offset  = ((binds.pagenum - 1) * binds.pagesiz);
 
 		query = query +
-		`\n; MOVE ABSOLUTE 200 FROM city_cursor; FETCH 20 FROM city_cursor; COMMIT;`;
+		`\n; MOVE ABSOLUTE ${binds.offset} FROM city_cursor; FETCH ${binds.pagesiz} FROM city_cursor; COMMIT;`;
 		// `\nLIMIT ${binds.pagesiz} OFFSET ((${binds.pagenum} - 1) * ${binds.pagesiz})`;
 	}
-	const balls = `BEGIN; DECLARE city_cursor CURSOR FOR SELECT * FROM city WHERE countrycode='USA'; MOVE ABSOLUTE 1 FROM city_cursor; FETCH 20 FROM city_cursor; COMMIT;`;
-	// const balls = `SELECT * FROM city WHERE countrycode='NIC';`;
-	return pgdatabase.simpleExecute(balls)
+
+	return pgdatabase.simpleExecute(query)
 		// .then(results => {
 		// 	console.log("results: " + JSON.stringify(results));
 		// })
