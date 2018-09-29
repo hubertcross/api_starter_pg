@@ -30,16 +30,26 @@ module.exports.find = (context) => {
 		query = query +
 				`\nAND c.name = '${binds.name}'`;
 	}
+	// Using UPPER on both column and parameter makes it case insensitive
 	if (context.countrycode) {
 		binds.countrycode = context.countrycode;
 		query = query +
-				`\nAND c.countrycode = '${binds.countrycode}'`;
+				`\nAND UPPER(c.countrycode) = UPPER('${binds.countrycode}')`;
 	}
 	if (context.district) {
 		binds.district = context.district;
 		query = query +
 				`\nAND c.district = '${binds.district}'`;
 	}
+
+	if (context.pagesiz && context.pagenum) {
+		binds.pagesiz = context.pagesiz;
+		binds.pagenum = context.pagenum;
+
+		query = query +
+			`\nLIMIT ${binds.pagesiz} OFFSET ((${binds.pagenum} - 1) * ${binds.pagesiz})`;
+	}
+	
 
 	return pgdatabase.simpleExecute(query)
 		// .then(results => {

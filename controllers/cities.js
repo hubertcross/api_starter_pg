@@ -8,7 +8,9 @@ module.exports.get = function get(req, res, next) {
 		id : req.query.id,
 		name : req.query.name,
 		countrycode : req.query.countrycode,
-		district : req.query.district
+		district : req.query.district,
+		pagesiz : req.query.pagesiz,
+		pagenum : req.query.pagenum
 	};
 
 	console.log("context: " + JSON.stringify(context));
