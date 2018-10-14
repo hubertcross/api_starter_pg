@@ -17,3 +17,8 @@ db_apis ................- models go here. it's where SQL queries are constructed
 services/pgdatabase.js .-direct calls to the pg database driver
 
 services/pgpool.js......-connection pool management
+
+
+Screenshot of console output during requests:
+
+![debug output sample](https://i.imgur.com/FL6kj6C.png)
