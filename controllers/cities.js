@@ -1,6 +1,43 @@
 //const pool = require('../services/pgdatabase');
 const cities = require('../db_apis/cities');
 
+// module.exports.get = function get(req, res, next) {
+//  	console.log("Cities GET service");
+
+// 	const context = {
+// 		id : req.query.id,
+// 		name : req.query.name,
+// 		countrycode : req.query.countrycode,
+// 		district : req.query.district,
+// 		pagesiz : req.query.pagesiz,
+// 		pagenum : req.query.pagenum
+// 	};
+
+// 	console.log("context: " + JSON.stringify(context));
+// //https://stackoverflow.com/questions/39059990/reusing-pg-pool-via-module-exports
+
+// 	return cities.find(context)
+// 		.then(function(results) {
+// 			if(results['rowCount'] > 0) {
+// 				res.status(200).json( results );
+// 			}
+// 			else {
+// 				res.status(404).end();
+// 			}
+// 		})
+// 		.catch(next);
+//  }
+
+
+/*
+In this controller we should have the following:
+1) get (select everything if no conditions and if no pagination options given, or page if so)
+2) post (create with given attributes)
+3) put (update a single row, by ID, with given attributes)
+4) delete (delete a set of rows. if no row is specified, no row is deleted)
+*/
+
+
 module.exports.get = function get(req, res, next) {
  	console.log("Cities GET service");
 
@@ -18,35 +55,12 @@ module.exports.get = function get(req, res, next) {
 
 	return cities.find(context)
 		.then(function(results) {
-			if(results['rowCount'] > 0) {
-				res.status(200).json( results );
-			}
-			else {
-				res.status(404).end();
-			}
-		})
-		.catch(next);
- }
-
-module.exports.getc = function getc(req, res, next) {
- 	console.log("Cities GET service");
-
-	const context = {
-		id : req.query.id,
-		name : req.query.name,
-		countrycode : req.query.countrycode,
-		district : req.query.district,
-		pagesiz : req.query.pagesiz,
-		pagenum : req.query.pagenum
-	};
-
-	console.log("context: " + JSON.stringify(context));
-//https://stackoverflow.com/questions/39059990/reusing-pg-pool-via-module-exports
-
-	return cities.findc(context)
-		.then(function(results) {
+			// for cursor pagination
 			if(results[3] && results[3]['rowCount'] > 0) {
 				res.status(200).json( results[3] );
+			}
+			else if (results && results['rowCount'] > 0) {
+				res.status(200).json( results );
 			}
 			else {
 				res.status(404).end();

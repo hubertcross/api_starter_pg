@@ -11,6 +11,7 @@ const baseQuery =
 				,c.countrycode
 				,c.district
 				,c.population
+				,COUNT(*) OVER() AS FULLCOUNT
 		FROM city AS c`;
 
 module.exports.find = (context) => {
@@ -63,10 +64,10 @@ module.exports.find = (context) => {
 		})
 }
 
+const cursorPrefix = `BEGIN; DECLARE city_cursor CURSOR FOR`;
+
 const baseQueryc =
-		`BEGIN;
-		DECLARE city_cursor CURSOR FOR
-		SELECT
+		`\nSELECT
 				c.id
 				,c.name
 				,c.countrycode
@@ -108,10 +109,14 @@ module.exports.findc = (context) => {
 		binds.pagenum = context.pagenum;
 		binds.offset  = ((binds.pagenum - 1) * binds.pagesiz);
 
-		query = query +
+		query = cursorPrefix + query +
 		`\n; MOVE ABSOLUTE ${binds.offset} FROM city_cursor; FETCH ${binds.pagesiz} FROM city_cursor; COMMIT;`;
 		// `\nLIMIT ${binds.pagesiz} OFFSET ((${binds.pagenum} - 1) * ${binds.pagesiz})`;
 	}
+	else {
+		query = query + `;\n`
+	}
+
 
 	return pgdatabase.simpleExecute(query)
 		// .then(results => {
