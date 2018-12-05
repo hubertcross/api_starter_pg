@@ -14,6 +14,8 @@ const baseQuery =
 				,COUNT(*) OVER() AS FULLCOUNT
 		FROM city AS c`;
 
+let params = [];
+
 module.exports.find = (context) => {
 	console.log("db_apis/cities.find")
 
@@ -24,18 +26,20 @@ module.exports.find = (context) => {
 	if (context.id) {
 		binds.id = context.id;
 		query = query +
-				`\nAND c.id = '${binds.id}'`;
+				`\nAND c.id = $` + (params.length + 1); // is this ghastly?
+				params[params.length] = `${binds.id}`;
 	}
 	if (context.name) {
 		binds.name = context.name;
 		query = query +
-				`\nAND c.name = '${binds.name}'`;
+				`\nAND c.name = $` + (params.length + 1);
+				params[params.length] = `${binds.name}`;
 	}
-	// Using UPPER on both column and parameter makes it case insensitive
 	if (context.countrycode) {
 		binds.countrycode = context.countrycode;
 		query = query +
-				`\nAND UPPER(c.countrycode) = UPPER('${binds.countrycode}')`;
+				`\nAND UPPER(c.countrycode) = UPPER($` + (params.length + 1) + `)`;
+				params[params.length] = `${binds.countrycode}`;
 	}
 	if (context.district) {
 		binds.district = context.district;
@@ -51,8 +55,9 @@ module.exports.find = (context) => {
 			`\nLIMIT ${binds.pagesiz} OFFSET ((${binds.pagenum} - 1) * ${binds.pagesiz})`;
 	}
 	
+	console.log(JSON.stringify(params));
 
-	return pgdatabase.simpleExecute(query)
+	return pgdatabase.simpleExecuteWithParameters(query, params)
 		// .then(results => {
 		// 	console.log("results: " + JSON.stringify(results));
 		// })

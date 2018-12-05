@@ -36,6 +36,20 @@ function simpleExecute(query) {
 
 module.exports.simpleExecute = simpleExecute;
 
+function simpleExecuteWithParameters(query, params) {
+	console.log("simpleExecute query: " + query);
+	return pool().query(query, params)
+		// .then(function(results) {
+		// 	console.log(JSON.stringify(results));
+		// })
+		.catch(function(err) {
+			console.log("Caught error from pool.query. Throwing.");
+			throw(err);
+		})
+}
+
+module.exports.simpleExecuteWithParameters = simpleExecuteWithParameters;
+
 // take array of json objects with query and params, run them in a single transaction
 /* 
 [{ queryString: "INSERT INTO person (name, city) VALUES($1, $2) RETURNING id",
