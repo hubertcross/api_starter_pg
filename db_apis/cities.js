@@ -44,7 +44,8 @@ module.exports.find = (context) => {
 	if (context.district) {
 		binds.district = context.district;
 		query = query +
-				`\nAND c.district = '${binds.district}'`;
+				`\nAND c.district = $` + (params.length + 1);
+				params[params.length] = `${binds.district}`;
 	}
 
 	if (context.pagesiz && context.pagenum) {
@@ -52,7 +53,15 @@ module.exports.find = (context) => {
 		binds.pagenum = context.pagenum;
 
 		query = query +
-			`\nLIMIT ${binds.pagesiz} OFFSET ((${binds.pagenum} - 1) * ${binds.pagesiz})`;
+			// `\nLIMIT ${binds.pagesiz} OFFSET ((${binds.pagenum} - 1) * ${binds.pagesiz})`;
+			`\nLIMIT $` + (params.length + 1);
+			params[params.length] = `${binds.pagesiz}`;
+		query = query +
+			`\nOFFSET (($` + (params.length + 1);
+			params[params.length] = `${binds.pagenum}`;
+		query = query +
+		 	`- 1) * $` + (params.length + 1) + `)`;
+		 	params[params.length] = `${binds.pagesiz}`;
 	}
 	
 	console.log(JSON.stringify(params));

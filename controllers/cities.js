@@ -1,33 +1,4 @@
-//const pool = require('../services/pgdatabase');
 const cities = require('../db_apis/cities');
-
-// module.exports.get = function get(req, res, next) {
-//  	console.log("Cities GET service");
-
-// 	const context = {
-// 		id : req.query.id,
-// 		name : req.query.name,
-// 		countrycode : req.query.countrycode,
-// 		district : req.query.district,
-// 		pagesiz : req.query.pagesiz,
-// 		pagenum : req.query.pagenum
-// 	};
-
-// 	console.log("context: " + JSON.stringify(context));
-// //https://stackoverflow.com/questions/39059990/reusing-pg-pool-via-module-exports
-
-// 	return cities.find(context)
-// 		.then(function(results) {
-// 			if(results['rowCount'] > 0) {
-// 				res.status(200).json( results );
-// 			}
-// 			else {
-// 				res.status(404).end();
-// 			}
-// 		})
-// 		.catch(next);
-//  }
-
 
 /*
 In this controller we should have the following:
@@ -105,6 +76,8 @@ module.exports.post = (req, res, next)  => {
 	});
 }
 
+// Porting to async
+// Should use prepared/parameterized statements
 
 // module.exports.post = (req, res, next)  => {
 // 	console.log("db_apis/cities.create");
