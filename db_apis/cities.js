@@ -74,7 +74,7 @@ module.exports.find = (context) => {
 		// 	return results.rows;
 		// })
 		.catch(error => {
-			console.log("Error during simpleExecute: " + error);
+			console.log("Error during simpleExecuteWithParameters: " + error);
 		})
 }
 

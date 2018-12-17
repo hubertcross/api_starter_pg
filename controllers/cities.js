@@ -37,7 +37,10 @@ module.exports.get = function get(req, res, next) {
 				res.status(404).end();
 			}
 		})
-		.catch(next);
+		// .catch(next);
+		.catch(function(error) {
+			res.status(520).end();
+		})
  }
 
 //const pool = require('../services/pgpool');
