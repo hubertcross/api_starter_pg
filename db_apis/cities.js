@@ -14,11 +14,10 @@ const baseQuery =
 				,COUNT(*) OVER() AS FULLCOUNT
 		FROM city AS c`;
 
-let params = [];
-
 module.exports.find = (context) => {
 	console.log("db_apis/cities.find")
 
+	let params = [];
 	const binds = {};
 
 	query = baseQuery + `\nWHERE 1=1`;
